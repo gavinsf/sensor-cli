@@ -1,4 +1,4 @@
-#include <gf_dht11.h>
+#include "gf_dht11.h"
 
 void init_dht11(dht11_t* dht, TIM_HandleTypeDef* htim, GPIO_TypeDef* port, uint16_t pin)
 {
@@ -15,7 +15,6 @@ dht_status_t read_dht11(dht11_t* dht)
 	uint8_t bitmap[5] = {0};
 
 
-
 	HAL_GPIO_WritePin(dht->port, dht->pin, GPIO_PIN_RESET);
 	HAL_Delay(18); // Wait 18ms in low
 	__disable_irq(); // Disabling interrupts for accurate timer
@@ -26,7 +25,7 @@ dht_status_t read_dht11(dht11_t* dht)
 	while (HAL_GPIO_ReadPin(dht->port, dht->pin) == GPIO_PIN_SET) {
 		if ((uint16_t)__HAL_TIM_GET_COUNTER(dht->htim) > 500) {
 			__enable_irq();
-			return DHT_START_TIMEOUT;
+			return DHT_TIMEOUT_START;
 		}
 	}
 
@@ -43,7 +42,7 @@ dht_status_t read_dht11(dht11_t* dht)
 	// Expecting tim_1 = 80 (microseconds)
 	if (tim < 75 || tim > 85) {
 		__enable_irq();
-		return DHT_ERROR_START;
+		return DHT_ERROR_START_1;
 	}
 
 	__HAL_TIM_SET_COUNTER(dht->htim, 0);
@@ -56,9 +55,9 @@ dht_status_t read_dht11(dht11_t* dht)
 	tim = (uint16_t)__HAL_TIM_GET_COUNTER(dht->htim);
 
 	// Expecting tim_2 = 80 (microseconds)
-	if (tim < 75 || tim > 85) {
+	if (tim < 70 || tim > 90) {
 		__enable_irq();
-		return DHT_ERROR_START;
+		return DHT_ERROR_START_2;
 	}
 
 	/*
@@ -82,7 +81,7 @@ dht_status_t read_dht11(dht11_t* dht)
 		tim = (uint16_t)__HAL_TIM_GET_COUNTER(dht->htim);
 
 		// Expecting 50 (microseconds)
-		if (tim < 45 || tim > 55) {
+		if (tim < 40 || tim > 60) {
 			__enable_irq();
 			return DHT_ERROR_BIT_START;
 		}
@@ -96,9 +95,9 @@ dht_status_t read_dht11(dht11_t* dht)
 		}
 		tim = (uint16_t)__HAL_TIM_GET_COUNTER(dht->htim);
 
-		if (tim > 20 && tim < 35) {
+		if (tim > 15 && tim < 35) {
 			bit = 0;
-		} else if (tim > 65 && tim < 75) {
+		} else if (tim > 60 && tim < 80) {
 			bit = 1;
 		} else {
 			__enable_irq();

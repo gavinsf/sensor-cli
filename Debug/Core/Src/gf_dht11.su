@@ -1,0 +1,2 @@
+../Core/Src/gf_dht11.c:3:6:init_dht11	24	static
+../Core/Src/gf_dht11.c:11:14:read_dht11	40	static,ignoring_inline_asm

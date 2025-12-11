@@ -1,0 +1,2 @@
+../Core/Src/gf_dht11.c:3:6:init_dht11	1
+../Core/Src/gf_dht11.c:11:14:read_dht11	23
