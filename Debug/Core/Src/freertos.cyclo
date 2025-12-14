@@ -1,0 +1,7 @@
+../Core/Src/freertos.c:77:6:vApplicationGetIdleTaskMemory	1
+../Core/Src/freertos.c:91:6:MX_FREERTOS_Init	1
+../Core/Src/freertos.c:148:6:StartMainTask	1
+../Core/Src/freertos.c:172:6:StartScanfTask	2
+../Core/Src/freertos.c:200:5:__io_putchar	1
+../Core/Src/freertos.c:205:6:HAL_GPIO_EXTI_Callback	1
+../Core/Src/freertos.c:209:6:HAL_UART_RxCpltCallback	3
